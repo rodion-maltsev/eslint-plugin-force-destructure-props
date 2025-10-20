@@ -1,5 +1,5 @@
 module.exports = {
   rules: {
-    'require-props-destructuring': require('./lib/rules/require-props-destructuring'),
+    'force-destructure-props': require('./lib/rules/force-destructure-props'),
   },
 };

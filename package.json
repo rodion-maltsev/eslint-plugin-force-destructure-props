@@ -35,6 +35,6 @@
     "eslint": "^9.38.0"
   },
   "scripts": {
-    "test": "node tests/require-props-destructuring.test.js"
+    "test": "node tests/force-destructure-props.test.js"
   }
 }

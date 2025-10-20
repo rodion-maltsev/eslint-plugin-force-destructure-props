@@ -1,5 +1,5 @@
 const { RuleTester } = require('eslint');
-const rule = require('../lib/rules/require-props-destructuring');
+const rule = require('../lib/rules/force-destructure-props');
 
 const ruleTester = new RuleTester({
   languageOptions: {
@@ -8,7 +8,7 @@ const ruleTester = new RuleTester({
   },
 });
 
-ruleTester.run('require-props-destructuring', rule, {
+ruleTester.run('force-destructure-props', rule, {
   valid: [
     {
       code: `export const Comp = (props) => { const { a, b } = props; return null; }`,
