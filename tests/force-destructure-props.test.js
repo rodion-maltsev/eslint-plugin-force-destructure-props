@@ -15,33 +15,33 @@ const ruleTester = new RuleTester({
 ruleTester.run('force-destructure-props (JavaScript)', rule, {
   valid: [
     {
-      code: `const helper = ({ a }) => a + 1;`,
+      code: `const helper = ({ value }) => value + 1;`,
     },
     {
-      code: `function util({ x }) { return x * 2; }`,
+      code: `function util({ input }) { return input * 2; }`,
     },
     {
-      code: `const Comp = (props) => { const { a, b } = props; return <div />; }`,
+      code: `const Component = (props) => { const { title, content } = props; return <div />; }`,
     },
     {
-      code: `function Comp(props) { const { x } = props; return <span />; }`,
+      code: `function Component(props) { const { data } = props; return <span />; }`,
     },
   ],
   invalid: [
     {
-      code: `const Comp = ({ a, b }) => { return <div />; }`,
+      code: `const Component = ({ title, content }) => { return <div />; }`,
       errors: [{ messageId: 'noDestructuringInParams' }],
-      output: `const Comp = (props) => { const { a, b } = props; return <div />; }`,
+      output: `const Component = (props) => { const { title, content } = props; return <div />; }`,
     },
     {
-      code: `function Comp({ x }) { return <span />; }`,
+      code: `function Component({ data }) { return <span />; }`,
       errors: [{ messageId: 'noDestructuringInParams' }],
-      output: `function Comp(props) { const { x } = props; return <span />; }`,
+      output: `function Component(props) { const { data } = props; return <span />; }`,
     },
     {
-      code: `const AnotherComp = ({ y }) => <y />;`,
+      code: `const Widget = ({ config }) => <div />;`,
       errors: [{ messageId: 'noDestructuringInParams' }],
-      output: `const AnotherComp = (props) => { const { y } = props; return <y />; };`,
+      output: `const Widget = (props) => { const { config } = props; return <div />; };`,
     },
   ],
 });
@@ -49,52 +49,62 @@ ruleTester.run('force-destructure-props (JavaScript)', rule, {
 ruleTester.run('force-destructure-props (TypeScript)', rule, {
   valid: [
     {
-      code: `const helper = ({ a }: { a: number }) => a + 1;`,
+      code: `const helper = ({ value }: { value: number }) => value + 1;`,
       filename: 'test.tsx',
     },
     {
-      code: `function util({ x }: { x: number }) { return x * 2; }`,
+      code: `function util({ input }: { input: number }) { return input * 2; }`,
       filename: 'test.tsx',
     },
     {
-      code: `const Comp = (props: { a: string; b: number }) => { const { a, b } = props; return <div />; }`,
+      code: `const Component = (props: { title: string; content: number }) => { const { title, content } = props; return <div />; }`,
       filename: 'test.tsx',
     },
     {
-      code: `function Comp(props: { x: string }) { const { x } = props; return <span />; }`,
+      code: `function Component(props: { data: string }) { const { data } = props; return <span />; }`,
       filename: 'test.tsx',
     },
   ],
   invalid: [
     {
-      code: `const Component = ({ onId }: { onId: (id: string) => void }) => { return <div />; }`,
+      code: `const Component = ({ callback }: { callback: (id: string) => void }) => { return <div />; }`,
       filename: 'test.tsx',
       errors: [{ messageId: 'noDestructuringInParams' }],
-      output: `const Component = (props: { onId: (id: string) => void }) => { const { onId } = props; return <div />; }`,
+      output: `const Component = (props: { callback: (id: string) => void }) => { const { callback } = props; return <div />; }`,
     },
     {
-      code: `function MyComponent({ value, onChange }: { value: string; onChange: (v: string) => void }) { return <span />; }`,
+      code: `function FormComponent({ value, onChange }: { value: string; onChange: (v: string) => void }) { return <span />; }`,
       filename: 'test.tsx',
       errors: [{ messageId: 'noDestructuringInParams' }],
-      output: `function MyComponent(props: { value: string; onChange: (v: string) => void }) { const { value, onChange } = props; return <span />; }`,
+      output: `function FormComponent(props: { value: string; onChange: (v: string) => void }) { const { value, onChange } = props; return <span />; }`,
     },
     {
-      code: `const ButtonComponent = ({ text, disabled }: { text: string; disabled?: boolean }) => <button disabled={disabled}>{text}</button>;`,
+      code: `const Button = ({ label, disabled }: { label: string; disabled?: boolean }) => <button disabled={disabled}>{label}</button>;`,
       filename: 'test.tsx',
       errors: [{ messageId: 'noDestructuringInParams' }],
-      output: `const ButtonComponent = (props: { text: string; disabled?: boolean }) => { const { text, disabled } = props; return <button disabled={disabled}>{text}</button>; };`,
+      output: `const Button = (props: { label: string; disabled?: boolean }) => { const { label, disabled } = props; return <button disabled={disabled}>{label}</button>; };`,
     },
     {
-      code: `const renderProductCell = ({
-  row: { name, carrier, productType, duration, returnRate, state: stateOfIssue, firstInsured, secondInsured, status },
-  withLinkToCarrierPage = false,
-}: RenderIllustrationProductCellParams) => { return <div />; }`,
+      code: `const DataRenderer = ({
+  items: { name, type, status, metadata, settings, config, state: currentState, primary, secondary, tertiary },
+  showDetails = false,
+}: DataRendererProps) => { return <div />; }`,
       filename: 'test.tsx',
       errors: [{ messageId: 'noDestructuringInParams' }],
-      output: `const renderProductCell = (props: RenderIllustrationProductCellParams) => { const {
-  row: { name, carrier, productType, duration, returnRate, state: stateOfIssue, firstInsured, secondInsured, status },
-  withLinkToCarrierPage = false,
+      output: `const DataRenderer = (props: DataRendererProps) => { const {
+  items: { name, type, status, metadata, settings, config, state: currentState, primary, secondary, tertiary },
+  showDetails = false,
 } = props; return <div />; }`,
+    },
+    {
+      code: `const TableColumn = ({ field, options }: TableColumnProps) => ({
+  field,
+  resizable: false,
+  renderCell: (params) => RenderCell(params, options),
+});`,
+      filename: 'test.tsx',
+      errors: [{ messageId: 'noDestructuringInParams' }],
+      // autofix is not available for this case
     },
   ],
 });
