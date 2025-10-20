@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rodionmaltsev/eslint-plugin-force-destructure-props.git"
+    "url": "git+https://github.com/rodionmaltsev/eslint-plugin-force-destructure-props.git"
   },
   "bugs": {
     "url": "https://github.com/rodionmaltsev/eslint-plugin-force-destructure-props/issues"
