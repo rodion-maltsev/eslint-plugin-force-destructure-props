@@ -84,6 +84,18 @@ ruleTester.run('force-destructure-props (TypeScript)', rule, {
       errors: [{ messageId: 'noDestructuringInParams' }],
       output: `const ButtonComponent = (props: { text: string; disabled?: boolean }) => { const { text, disabled } = props; return <button disabled={disabled}>{text}</button>; };`,
     },
+    {
+      code: `const renderProductCell = ({
+  row: { name, carrier, productType, duration, returnRate, state: stateOfIssue, firstInsured, secondInsured, status },
+  withLinkToCarrierPage = false,
+}: RenderIllustrationProductCellParams) => { return <div />; }`,
+      filename: 'test.tsx',
+      errors: [{ messageId: 'noDestructuringInParams' }],
+      output: `const renderProductCell = (props: RenderIllustrationProductCellParams) => { const {
+  row: { name, carrier, productType, duration, returnRate, state: stateOfIssue, firstInsured, secondInsured, status },
+  withLinkToCarrierPage = false,
+} = props; return <div />; }`,
+    },
   ],
 });
 
