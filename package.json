@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-force-destructure-props",
   "version": "1.0.0",
-  "description": "ESLint rule to enforce props destructuring inside function component body",
+  "description": "ESLint rule enforcing props destructuring inside the component body instead of the parameter list.",
   "main": "index.js",
   "keywords": [
     "eslint",
@@ -26,10 +26,13 @@
   "publishConfig": {
     "access": "public"
   },
+  "peerDependencies": {
+    "eslint": ">=8.57.0"
+  },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.25.0",
     "@eslint/eslintrc": "^3.3.1",
-    "eslint": "^9.38.0",
-    "eslint-rule-tester": "^2.0.0"
+    "eslint": "^9.38.0"
   },
   "scripts": {
     "test": "node tests/require-props-destructuring.test.js"
