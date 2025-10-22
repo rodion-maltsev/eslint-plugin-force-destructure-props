@@ -1,6 +1,6 @@
 module.exports = {
   rules: {
-    'force-destructure-props': require('./lib/rules/force-destructure-props'),
+    'force-destructure-props': require('./src/lib/force-destructure-props'),
   },
   configs: {
     recommended: {

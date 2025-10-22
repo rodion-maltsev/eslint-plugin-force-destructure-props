@@ -30,6 +30,6 @@
     "eslint": ">=8.57.0"
   },
   "scripts": {
-    "test": "node tests/force-destructure-props.test.js"
+    "test": "node src/tests/force-destructure-props.test.js"
   }
 }

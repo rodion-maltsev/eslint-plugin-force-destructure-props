@@ -1,5 +1,5 @@
 const { RuleTester } = require('eslint');
-const rule = require('../lib/rules/force-destructure-props');
+const rule = require('../lib/force-destructure-props');
 
 const ruleTester = new RuleTester({
   languageOptions: {
