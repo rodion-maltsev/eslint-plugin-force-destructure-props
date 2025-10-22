@@ -238,7 +238,7 @@ ruleTester.run('force-destructure-props', rule, {
       `,
     },
 
-    // Cases where autofix is disabled - memo wrapper
+    // Cases where autofix is enabled for memo wrapper
     {
       code: `
         const MyComponent = memo(({ name }) => {
@@ -251,10 +251,15 @@ ruleTester.run('force-destructure-props', rule, {
           type: 'ObjectPattern',
         },
       ],
-      // No output - autofix disabled for memo
+      output: `
+        const MyComponent = memo((props) => {
+          const { name } = props;
+          return <div>{name}</div>;
+        });
+      `,
     },
 
-    // Cases where autofix is disabled - React.memo wrapper
+    // Cases where autofix is enabled for React.memo wrapper
     {
       code: `
         const MyComponent = React.memo(({ name }) => {
@@ -267,10 +272,15 @@ ruleTester.run('force-destructure-props', rule, {
           type: 'ObjectPattern',
         },
       ],
-      // No output - autofix disabled for React.memo
+      output: `
+        const MyComponent = React.memo((props) => {
+          const { name } = props;
+          return <div>{name}</div>;
+        });
+      `,
     },
 
-    // Cases where autofix is disabled - forwardRef wrapper
+    // Cases where autofix is enabled for forwardRef wrapper
     {
       code: `
         const MyComponent = forwardRef(({ name }, ref) => {
@@ -283,10 +293,15 @@ ruleTester.run('force-destructure-props', rule, {
           type: 'ObjectPattern',
         },
       ],
-      // No output - autofix disabled for forwardRef
+      output: `
+        const MyComponent = forwardRef((props, ref) => {
+          const { name } = props;
+          return <div ref={ref}>{name}</div>;
+        });
+      `,
     },
 
-    // Cases where autofix is disabled - React.forwardRef wrapper
+    // Cases where autofix is enabled for React.forwardRef wrapper
     {
       code: `
         const MyComponent = React.forwardRef(({ name }, ref) => {
@@ -299,7 +314,12 @@ ruleTester.run('force-destructure-props', rule, {
           type: 'ObjectPattern',
         },
       ],
-      // No output - autofix disabled for React.forwardRef
+      output: `
+        const MyComponent = React.forwardRef((props, ref) => {
+          const { name } = props;
+          return <div ref={ref}>{name}</div>;
+        });
+      `,
     },
 
     // Cases where autofix is disabled - arrow function with parentheses around body
@@ -419,6 +439,35 @@ ruleTester.run('force-destructure-props', rule, {
             </ul>
           );
         }
+      `,
+    },
+
+    // Arrow function with multi-line JSX in parentheses
+    {
+      code: `
+        const MyComponent = ({ title, subtitle }) => (
+          <div>
+            <h1>{title}</h1>
+            <p>{subtitle}</p>
+          </div>
+        );
+      `,
+      errors: [
+        {
+          messageId: 'noDestructuringInParams',
+          type: 'ObjectPattern',
+        },
+      ],
+      output: `
+        const MyComponent = (props) => {
+          const { title, subtitle } = props;
+          return (
+            <div>
+                        <h1>{title}</h1>
+                        <p>{subtitle}</p>
+                      </div>
+          );
+        };
       `,
     },
   ],
