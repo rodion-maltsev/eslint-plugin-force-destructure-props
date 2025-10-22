@@ -23,6 +23,18 @@ ruleTester.run('force-destructure-props', rule, {
     {
       code: 'const regularFunction = ({ param1, param2 }) => param1 + param2;',
     },
+    // Callback functions (not React components)
+    {
+      code: `
+        const MyComponent = () => {
+          const mutation = useAgentAssignAgent(({ id, assigneeId }) => ({
+            clientCompanyId: id,
+            requestBody: { agentId: assigneeId },
+          }));
+          return <div>Component</div>;
+        };
+      `,
+    },
     // React components with props parameter (valid)
     {
       code: `
