@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-force-destructure-props",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "ESLint rule enforcing props destructuring inside the component body instead of the parameter list.",
   "main": "index.js",
   "keywords": [
