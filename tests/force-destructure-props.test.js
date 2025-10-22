@@ -86,6 +86,53 @@ ruleTester.run('force-destructure-props', rule, {
     {
       code: 'const MyComponent = props => <div>{props.name}</div>;',
     },
+
+    // Non-React callback functions in object properties
+    {
+      code: `
+        const config = {
+          mutation: useAgentAssignAgent(({ id, assigneeId }) => ({
+            clientCompanyId: id,
+            requestBody: { agentId: assigneeId },
+          })),
+          getIdFromRow: useCallback((row) => row['clientCompanyId'], []),
+        };
+      `,
+    },
+
+    // Controller render prop - allowed destructuring
+    {
+      code: `
+        <Controller
+          name="password"
+          control={control}
+          render={({ field: { value, onChange }, fieldState: { invalid, error } }) => (
+            <TextFieldWrapped
+              value={value}
+              onChange={onChange}
+              type='password'
+              label='New password'
+              error={invalid}
+              hint={invalid ? error?.message : 'Password hint'}
+            />
+          )}
+        />
+      `,
+    },
+
+    // Field children render prop - allowed destructuring
+    {
+      code: `
+        <Field name="username">
+          {({ field, form, meta }) => (
+            <div>
+              <input type="text" {...field} placeholder="Username" />
+              {meta.touched && meta.error && <div className="error">{meta.error}</div>}
+            </div>
+          )}
+        </Field>
+      `,
+    },
   ],
   invalid: [
     // Function declaration with destructuring
