@@ -4,7 +4,7 @@ const createFix = require('./createFix');
  * Сообщает об ошибке деструктуризации props в параметрах и предоставляет автофикс
  */
 function reportIfDestructured(context, node, param) {
-  const sourceCode = context.getSourceCode();
+  const sourceCode = context.sourceCode ?? context.getSourceCode();
 
   let canAutofix = true;
 

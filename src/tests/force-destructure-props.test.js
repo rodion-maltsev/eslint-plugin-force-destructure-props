@@ -532,4 +532,43 @@ ruleTester.run('force-destructure-props', rule, {
   ],
 });
 
+// Unit test for reportIfDestructured: verifies ESLint 10 compatibility
+// where context.sourceCode is used instead of the removed context.getSourceCode()
+{
+  const reportIfDestructured = require('../utils/reportIfDestructured');
+
+  // Simulates ArrowFunctionExpression returning an object literal: ({ name }) => ({ foo: bar })
+  // This pattern sets canAutofix = false, so createFix is never called and we only need getText.
+  const bodyNode = { type: 'ObjectExpression', _text: '{ foo: bar }' };
+  const mockNode = {
+    type: 'ArrowFunctionExpression',
+    body: bodyNode,
+    _text: '({ name }) => ({ foo: bar })',
+  };
+
+  const mockSourceCode = {
+    getText: (node) => node._text || '',
+  };
+
+  const reports = [];
+  const mockContext = {
+    // ESLint 10: only context.sourceCode, no getSourceCode()
+    sourceCode: mockSourceCode,
+    report: (data) => reports.push(data),
+  };
+
+  const mockParam = { type: 'ObjectPattern' };
+
+  reportIfDestructured(mockContext, mockNode, mockParam);
+
+  if (reports.length !== 1) {
+    throw new Error(`Expected 1 report, got ${reports.length}`);
+  }
+  if (reports[0].messageId !== 'noDestructuringInParams') {
+    throw new Error(`Expected messageId 'noDestructuringInParams', got '${reports[0].messageId}'`);
+  }
+
+  console.log('ESLint 10 compatibility test passed (context.sourceCode without getSourceCode)');
+}
+
 console.log('All tests passed');
